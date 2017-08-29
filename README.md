@@ -1,6 +1,14 @@
 # caffe-pro
 Memory-efficient Caffe on Linux
 
+## Feature
+
+1.Runtime GPU memory usage Optimization (by merging Yuanjun Xiong's caffe https://github.com/yjxiong/caffe/wiki/Memory-Optimization)
+
+2.Modified ROI Pooling layer following Mask-RCNN (ROIAlign) for object detection
+
+3.Fully compatible with official caffe with NCCL multi-GPU support and Python interface (compatible with multi-gpu training, such as  https://github.com/bharatsingh430/py-R-FCN-multiGPU)
+
 # Caffe
 
 [![Build Status](https://travis-ci.org/BVLC/caffe.svg?branch=master)](https://travis-ci.org/BVLC/caffe)
