@@ -52,10 +52,10 @@ __global__ void ROIPoolForward(
 
       int x1, x2, y1, y2;
       float px, py, pxmax, pymax, pxmin, pymin;
-      pxmax = roi_start_w + static_cast<Dtype>(pw + 0.75) * bin_size_w;
-      pymax = roi_start_h + static_cast<Dtype>(ph + 0.75) * bin_size_h;
-      pxmin = roi_start_w + static_cast<Dtype>(pw + 0.25) * bin_size_w;
-      pymin = roi_start_h + static_cast<Dtype>(ph + 0.25) * bin_size_h;
+      pxmax = min(max(roi_start_w + static_cast<Dtype>(pw + 0.75) * bin_size_w, 0.001), width - 1.001);
+      pymax = min(max(roi_start_h + static_cast<Dtype>(ph + 0.75) * bin_size_h, 0.001), height - 1.001);
+      pxmin = min(max(roi_start_w + static_cast<Dtype>(pw + 0.25) * bin_size_w, 0.001), width - 1.001);
+      pymin = min(max(roi_start_h + static_cast<Dtype>(ph + 0.25) * bin_size_h, 0.001), height - 1.001);
 
       Dtype out_sum = 0;
 
@@ -69,10 +69,10 @@ __global__ void ROIPoolForward(
       y1 = floor(py);
       y2 = ceil(py);
 
-      if(y2>=0 && y2<height && x2>=0 && x2<width){out_sum += (px-x1)*(py-y1) * bottom_data[int(y2*width + x2)];}
-      if(y1>=0 && y1<height && x2>=0 && x2<width){out_sum += (px-x1)*(y2-py) * bottom_data[int(y1*width + x2)];}
-      if(y2>=0 && y2<height && x1>=0 && x1<width){out_sum += (x2-px)*(py-y1) * bottom_data[int(y2*width + x1)];}
-      if(y1>=0 && y1<height && x1>=0 && x1<width){out_sum += (x2-px)*(y2-py) * bottom_data[int(y1*width + x1)];}
+      out_sum += (px-x1)*(py-y1) * bottom_data[int(y2*width + x2)];
+      out_sum += (px-x1)*(y2-py) * bottom_data[int(y1*width + x2)];
+      out_sum += (x2-px)*(py-y1) * bottom_data[int(y2*width + x1)];
+      out_sum += (x2-px)*(y2-py) * bottom_data[int(y1*width + x1)];
 
       px = pxmax;
       py = pymax;
@@ -82,10 +82,11 @@ __global__ void ROIPoolForward(
       y1 = floor(py);
       y2 = ceil(py);
 
-      if(y2>=0 && y2<height && x2>=0 && x2<width){out_sum += (px-x1)*(py-y1) * bottom_data[int(y2*width + x2)];}
-      if(y1>=0 && y1<height && x2>=0 && x2<width){out_sum += (px-x1)*(y2-py) * bottom_data[int(y1*width + x2)];}
-      if(y2>=0 && y2<height && x1>=0 && x1<width){out_sum += (x2-px)*(py-y1) * bottom_data[int(y2*width + x1)];}
-      if(y1>=0 && y1<height && x1>=0 && x1<width){out_sum += (x2-px)*(y2-py) * bottom_data[int(y1*width + x1)];}
+      out_sum += (px-x1)*(py-y1) * bottom_data[int(y2*width + x2)];
+      out_sum += (px-x1)*(y2-py) * bottom_data[int(y1*width + x2)];
+      out_sum += (x2-px)*(py-y1) * bottom_data[int(y2*width + x1)];
+      out_sum += (x2-px)*(y2-py) * bottom_data[int(y1*width + x1)];
+
       px = pxmin;
       py = pymax;
 
@@ -94,10 +95,10 @@ __global__ void ROIPoolForward(
       y1 = floor(py);
       y2 = ceil(py);
 
-      if(y2>=0 && y2<height && x2>=0 && x2<width){out_sum += (px-x1)*(py-y1) * bottom_data[int(y2*width + x2)];}
-      if(y1>=0 && y1<height && x2>=0 && x2<width){out_sum += (px-x1)*(y2-py) * bottom_data[int(y1*width + x2)];}
-      if(y2>=0 && y2<height && x1>=0 && x1<width){out_sum += (x2-px)*(py-y1) * bottom_data[int(y2*width + x1)];}
-      if(y1>=0 && y1<height && x1>=0 && x1<width){out_sum += (x2-px)*(y2-py) * bottom_data[int(y1*width + x1)];}
+      out_sum += (px-x1)*(py-y1) * bottom_data[int(y2*width + x2)];
+      out_sum += (px-x1)*(y2-py) * bottom_data[int(y1*width + x2)];
+      out_sum += (x2-px)*(py-y1) * bottom_data[int(y2*width + x1)];
+      out_sum += (x2-px)*(y2-py) * bottom_data[int(y1*width + x1)];
 
       px = pxmax;
       py = pymin;
@@ -107,10 +108,10 @@ __global__ void ROIPoolForward(
       y1 = floor(py);
       y2 = ceil(py);
 
-      if(y2>=0 && y2<height && x2>=0 && x2<width){out_sum += (px-x1)*(py-y1) * bottom_data[int(y2*width + x2)];}
-      if(y1>=0 && y1<height && x2>=0 && x2<width){out_sum += (px-x1)*(y2-py) * bottom_data[int(y1*width + x2)];}
-      if(y2>=0 && y2<height && x1>=0 && x1<width){out_sum += (x2-px)*(py-y1) * bottom_data[int(y2*width + x1)];}
-      if(y1>=0 && y1<height && x1>=0 && x1<width){out_sum += (x2-px)*(y2-py) * bottom_data[int(y1*width + x1)];}
+      out_sum += (px-x1)*(py-y1) * bottom_data[int(y2*width + x2)];
+      out_sum += (px-x1)*(y2-py) * bottom_data[int(y1*width + x2)];
+      out_sum += (x2-px)*(py-y1) * bottom_data[int(y2*width + x1)];
+      out_sum += (x2-px)*(y2-py) * bottom_data[int(y1*width + x1)];
     top_data[index] = out_sum/4;
   }
 }
@@ -167,10 +168,10 @@ __global__ void ROIPoolBackward(
 
      int x1, x2, y1, y2 ;
       float pxmin, pymin, pxmax, pymax, py, px;
-      pxmax = roi_start_w + static_cast<Dtype>(pw + 0.75) * bin_size_w;
-      pymax = roi_start_h + static_cast<Dtype>(ph + 0.75) * bin_size_h;
-      pxmin = roi_start_w + static_cast<Dtype>(pw + 0.25) * bin_size_w;
-      pymin = roi_start_h + static_cast<Dtype>(ph + 0.25) * bin_size_h;
+      pxmax = min(max(roi_start_w + static_cast<Dtype>(pw + 0.75) * bin_size_w, 0.001), width - 1.001);
+      pymax = min(max(roi_start_h + static_cast<Dtype>(ph + 0.75) * bin_size_h, 0.001), height - 1.001);
+      pxmin = min(max(roi_start_w + static_cast<Dtype>(pw + 0.25) * bin_size_w, 0.001), width - 1.001);
+      pymin = min(max(roi_start_h + static_cast<Dtype>(ph + 0.25) * bin_size_h, 0.001), height - 1.001);
 
       Dtype* offset_bottom_diff = bottom_diff + (roi_batch_ind * channels + c) * height * width;
       Dtype diff_val = 0;
@@ -182,11 +183,6 @@ __global__ void ROIPoolBackward(
       x2 = ceil(px);
       y1 = floor(py);
       y2 = ceil(py);
-      if(y2>=0 && y2<height && x2>=0 && x2<width){caffe_gpu_atomic_add(diff_val * (px-x1)*(py-y1), offset_bottom_diff + int(y2*width + x2));}
-      if(y1>=0 && y1<height && x2>=0 && x2<width){caffe_gpu_atomic_add(diff_val * (px-x1)*(y2-py), offset_bottom_diff + int(y1*width + x2));}
-      if(y2>=0 && y2<height && x1>=0 && x1<width){caffe_gpu_atomic_add(diff_val * (x2-px)*(py-y1), offset_bottom_diff + int(y2*width + x1));}
-      if(y1>=0 && y1<height && x1>=0 && x1<width){caffe_gpu_atomic_add(diff_val * (x2-px)*(y2-py), offset_bottom_diff + int(y1*width + x1));}
-
       caffe_gpu_atomic_add(diff_val * (px-x1)*(py-y1), offset_bottom_diff + int(y2*width + x2));
       caffe_gpu_atomic_add(diff_val * (px-x1)*(y2-py), offset_bottom_diff + int(y1*width + x2));
       caffe_gpu_atomic_add(diff_val * (x2-px)*(py-y1), offset_bottom_diff + int(y2*width + x1));
